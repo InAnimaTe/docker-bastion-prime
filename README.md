@@ -1,6 +1,6 @@
 ## Bastion Prime
 
-This is a container modified from the excellent [apline-sshd](https://github.com/sickp/docker-alpine-sshd) meant
+This is a container modified from the excellent [alpine-sshd](https://github.com/sickp/docker-alpine-sshd) meant
 to provide an ephemeral bastion container. It's meant for you to copy in `public_keys`
 letting people login as user `jump`. It's locked down with basic [hardening](https://gist.github.com/jumanjiman/f9d3db977846c163df12) best practices and meant to be run in with a read-only filesystem.
 
