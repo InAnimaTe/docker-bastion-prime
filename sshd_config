@@ -1,0 +1,84 @@
+# This sshd was compiled with PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options override the
+# default value.
+
+Port 2222
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+
+HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+
+# from https://cipherli.st/ and https://wiki.mozilla.org/Security/Guidelines/OpenSSH
+
+KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
+
+# Logging
+#SyslogFacility AUTH
+LogLevel VERBOSE
+
+# Authentication:
+
+LoginGraceTime 2m
+PermitRootLogin no
+PermitUserRC no
+StrictModes no
+MaxAuthTries 6
+MaxSessions 10
+
+PubkeyAuthentication yes
+
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile      .ssh/authorized_keys
+
+#AuthorizedPrincipalsFile none
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+# Change to no to disable s/key passwords
+ChallengeResponseAuthentication no
+
+#UsePAM yes
+AuthenticationMethods publickey
+AllowAgentForwarding no
+AllowTcpForwarding yes
+GatewayPorts no
+X11Forwarding no
+PermitTTY yes
+PrintMotd yes
+#PrintLastLog yes
+TCPKeepAlive yes
+#UseLogin no
+#UsePrivilegeSeparation sandbox
+PermitUserEnvironment no
+#Compression delayed
+ClientAliveInterval 30
+ClientAliveCountMax 3
+UseDNS no
+PidFile none
+PermitTunnel yes
+ChrootDirectory none
+VersionAddendum none
+
+# no default banner path
+Banner none
+
+# override default of no subsystems
+Subsystem       sftp    /usr/lib/ssh/sftp-server -f AUTHPRIV -l INFO
