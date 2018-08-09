@@ -25,3 +25,19 @@ docker run -p 22:2222 inanimate/bastion-prime
 
 While I didn't use the "hardening.sh" script bouncing around gist (see link above), I did implement the relevant bits
 that make sense for container of this stature including clearing out binaries like `su`, removing package manager bits, and remove kernel tunable files. *Remember*, this should be run (whether k8s, docker, etc..) in `read-only` mode! I also highly recommend utilizing seccomp or other deployent security enhancements available in your environment.
+
+Some key things I did (view `Dockerfile` and `sshd_config` for all configuration):
+
+* shell to /sbin/nologin
+* removal of binaries like `su`
+* disable tty
+* drop user
+* disable sftp
+
+### Security Thoughts and Suggestions upon runtime
+
+Please consider doing these when running this bastion.
+
+* Run with no capabilities `--cap-drop=all`
+* Read-only Filesystem (ensure you load in your own host keys or startup generation will fail)
+* Apply tight seccomp profile
