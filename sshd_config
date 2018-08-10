@@ -11,8 +11,6 @@ Port 2222
 #ListenAddress ::
 
 HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Ciphers and keying
@@ -61,8 +59,8 @@ AllowAgentForwarding no
 AllowTcpForwarding yes
 GatewayPorts no
 X11Forwarding no
-PermitTTY yes
-PrintMotd yes
+PermitTTY no
+PrintMotd no
 #PrintLastLog yes
 TCPKeepAlive yes
 #UseLogin no
@@ -73,7 +71,7 @@ ClientAliveInterval 30
 ClientAliveCountMax 3
 UseDNS no
 PidFile none
-PermitTunnel yes
+PermitTunnel no
 ChrootDirectory none
 VersionAddendum none
 
@@ -81,4 +79,4 @@ VersionAddendum none
 Banner none
 
 # override default of no subsystems
-Subsystem       sftp    /usr/lib/ssh/sftp-server -f AUTHPRIV -l INFO
+#Subsystem       sftp    /usr/lib/ssh/sftp-server -f AUTHPRIV -l INFO
