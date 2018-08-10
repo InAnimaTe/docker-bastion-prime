@@ -11,9 +11,9 @@ ENV DROPUSER jump
 RUN passwd -d root && \
     # ** Uncomment if copying host keys (see above) only!
     #chmod 600 /etc/ssh/ssh_host* && \
-    adduser -D -s /bin/ash $DROPUSER && \
+    adduser -D -s /sbin/nologin $DROPUSER && \
     passwd -d $DROPUSER && \
-    chown -R $DROPUSER:$DROPUSER /home/$DROPUSER && \
+    chown -R $DROPUSER:$DROPUSER /home/$DROPUSER /etc/ssh/ && \
     # define sysdirs
     sysdirs=" \
       /bin \
