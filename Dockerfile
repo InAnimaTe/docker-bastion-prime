@@ -1,16 +1,15 @@
-FROM sickp/alpine-sshd:7.5-r2
-
-# Please run this with a read-only filesystem :)
+FROM alpine:3.8
+LABEL maintainer "Mario Loria - https://github.com/inanimate/docker-bastion-prime"
 
 ENV DROPUSER jump
 
-# [Highly Recommended] Copy in static Host keys so this is truly ephemeral
-#COPY ssh_host* /etc/ssh/
+# Copy in static Host keys so this is truly ephemeral
+ONBUILD COPY ssh_host* /etc/ssh/
+ONBUILD RUN chown -R $DROPUSER:$DROPUSER /etc/ssh/
 
 # Disable root passwd, ensure perms, lockdown
-RUN passwd -d root && \
-    # ** Uncomment if copying host keys (see above) only!
-    #chmod 600 /etc/ssh/ssh_host* && \
+RUN apk --update --no-cache add openssh && \
+    passwd -d root && \
     adduser -D -s /sbin/nologin $DROPUSER && \
     passwd -d $DROPUSER && \
     chown -R $DROPUSER:$DROPUSER /home/$DROPUSER /etc/ssh/ && \
@@ -53,7 +52,10 @@ COPY sshd_config /etc/ssh/sshd_config
 # Set port
 EXPOSE 2222
 
+# Copy in entrypoint
+COPY entrypoint.sh /entrypoint.sh
+
 # Set locked user
 USER $DROPUSER
 
-# See base image for more information: https://github.com/sickp/docker-alpine-sshd
+ENTRYPOINT ["/entrypoint.sh"]
