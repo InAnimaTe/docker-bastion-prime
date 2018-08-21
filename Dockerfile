@@ -5,12 +5,14 @@ ENV DROPUSER jump
 
 # Copy in static Host keys so this is truly ephemeral
 ONBUILD COPY ssh_host* /etc/ssh/
-ONBUILD RUN chown -R $DROPUSER:$DROPUSER /etc/ssh/
+
+# Copy in our public keys file
+ONBUILD COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
 
 # Disable root passwd, ensure perms, lockdown
-RUN apk --update --no-cache add openssh && \
+ONBUILD RUN apk --update --no-cache add openssh && \
     passwd -d root && \
-    adduser -D -s /sbin/nologin $DROPUSER && \
+    adduser -D -s /bin/false $DROPUSER && \
     passwd -d $DROPUSER && \
     chown -R $DROPUSER:$DROPUSER /home/$DROPUSER /etc/ssh/ && \
     # define sysdirs
@@ -43,9 +45,6 @@ RUN apk --update --no-cache add openssh && \
       rm -fr /etc/mdev.conf && \
       rm -fr /etc/acpi
 
-# Copy in our public keys file
-COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
-
 # Copy in our own sshd_config with more tunings
 COPY sshd_config /etc/ssh/sshd_config
 
@@ -56,6 +55,6 @@ EXPOSE 2222
 COPY entrypoint.sh /entrypoint.sh
 
 # Set locked user
-USER $DROPUSER
+ONBUILD USER $DROPUSER
 
 ENTRYPOINT ["/entrypoint.sh"]
