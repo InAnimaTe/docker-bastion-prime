@@ -6,9 +6,6 @@ ENV DROPUSER jump
 ## Copy in static Host keys so this is truly ephemeral
 # ONBUILD COPY ssh_host* /etc/ssh/
 
-## Copy in our public keys file
-# ONBUILD COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
-
 # Disable root passwd, ensure perms, lockdown
 RUN apk --update --no-cache add openssh && \
     passwd -d root && \
@@ -47,6 +44,9 @@ RUN apk --update --no-cache add openssh && \
 
 # Copy in our own sshd_config with more tunings
 COPY sshd_config /etc/ssh/sshd_config
+
+# Copy in example (my) public key
+COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
 
 # Set port
 EXPOSE 2222
