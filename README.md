@@ -11,7 +11,35 @@ This is pretty easy to get going:
 docker run -p 22:2222 inanimate/bastion-prime
 ```
 
-> Yep, I left my public key in there so if you don't remove it, I has axx to your boxes ;) (j/k)
+### Providing options to ssh server
+
+You can override the default `sshd_config` options by passing more to the ssh daemon by passing them as runtime commands:
+
+```
+docker run -p 22:2222 inanimate/bastion-prime -o GatewayPorts=yes
+```
+
+### Using your own Host Keys and/or inserting public key(s)
+
+You can create a new image based off bastion-prime:
+
+1. Build a docker image sourced from bastion-prime importing your files:
+
+```
+FROM inanimate/bastion-prime
+
+# Copy in our own host keys
+COPY ssh_host* /etc/ssh/
+
+# Overwrite with our own public key file
+COPY public_keys /home/jump/.ssh/authorized_keys
+```
+
+2. You could also mount in at runtime:
+
+```
+docker run -v /home/me/myauthorizedkeys:/home/jump/.ssh/authorized_ksys -p 22:2222 inanimate/bastion-prime
+```
 
 ### Security Thoughts and Suggestions upon runtime
 

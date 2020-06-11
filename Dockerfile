@@ -3,14 +3,14 @@ LABEL maintainer "Mario Loria - https://github.com/inanimate/docker-bastion-prim
 
 ENV DROPUSER jump
 
-# Copy in static Host keys so this is truly ephemeral
-ONBUILD COPY ssh_host* /etc/ssh/
+## Copy in static Host keys so this is truly ephemeral
+# ONBUILD COPY ssh_host* /etc/ssh/
 
-# Copy in our public keys file
-ONBUILD COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
+## Copy in our public keys file
+# ONBUILD COPY public_keys /home/$DROPUSER/.ssh/authorized_keys
 
 # Disable root passwd, ensure perms, lockdown
-ONBUILD RUN apk --update --no-cache add openssh && \
+RUN apk --update --no-cache add openssh && \
     passwd -d root && \
     adduser -D -s /bin/false $DROPUSER && \
     passwd -d $DROPUSER && \
@@ -55,6 +55,6 @@ EXPOSE 2222
 COPY entrypoint.sh /entrypoint.sh
 
 # Set locked user
-ONBUILD USER $DROPUSER
+USER $DROPUSER
 
 ENTRYPOINT ["/entrypoint.sh"]
